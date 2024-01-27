@@ -29,6 +29,11 @@ func (n *Node) SetCurrent() (string, error) {
 	if err := n.appConfig.UpdateCurrent(n.version.String()); err != nil {
 		return "", fmt.Errorf("failed to update current Node.js version: %v", err)
 	}
+	if n.appConfig.GetDefault() == "" {
+		if err := n.appConfig.UpdateDefault(n.version.String()); err != nil {
+			return "", fmt.Errorf("failed to update default Node.js version: %v", err)
+		}
+	}
 
 	symlinksLocation := filepath.Join(os.Getenv("HOME"), constants.GnmDirName, "tty")
 	if _, err := os.Stat(symlinksLocation); os.IsNotExist(err) {
@@ -50,6 +55,8 @@ func (n *Node) SetCurrent() (string, error) {
 }
 
 func (n *Node) Install() error {
+	createGNMDir()
+
 	installed, err := n.IsInstalled()
 	if err != nil {
 		return err
@@ -132,4 +139,22 @@ func (n *Node) installProgressHandler(downloaded, total int64) {
 	}
 
 	fmt.Printf("\rDownloading Node.js version %s [%s] %d%%", n.version.String(), progressBar, progressPercent)
+}
+
+func createGNMDir() error {
+	dirToCreate := []string{
+		filepath.Join(os.Getenv("HOME"), constants.GnmDirName),
+		filepath.Join(os.Getenv("HOME"), constants.GnmDirName, constants.ArchivesDirName),
+		filepath.Join(os.Getenv("HOME"), constants.GnmDirName, constants.VersionDirName),
+	}
+
+	for _, dir := range dirToCreate {
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			if err := os.MkdirAll(dir, 0755); err != nil {
+				return fmt.Errorf("failed to create directory: %v", err)
+			}
+		}
+	}
+
+	return nil
 }

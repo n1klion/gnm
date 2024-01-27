@@ -51,6 +51,11 @@ func (c *Config) UpdateCurrent(version string) error {
 	return c.SaveConfig()
 }
 
+func (c *Config) UpdateDefault(version string) error {
+	c.defaultNode = version
+	return c.SaveConfig()
+}
+
 func (c *Config) GetCurrent() string {
 	return c.currentNode
 }
