@@ -39,7 +39,7 @@ end
 
 ## Usage
 
-gnm install <version> - install Node JS version
-gnm use <version> - use Node JS version
-gnm uninstall <version> - uninstall Node JS version
-gnm list - list installed Node JS versions
+- `gnm install <version>` - install Node JS version
+- `gnm use <version>` - use Node JS version
+- `gnm uninstall <version>` - uninstall Node JS version
+- `gnm list` - list installed Node JS versions
